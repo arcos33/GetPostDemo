@@ -8,22 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		3A8FD12021B73BD7005748CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD11F21B73BD7005748CC /* AppDelegate.swift */; };
-		3A8FD12221B73BD7005748CC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD12121B73BD7005748CC /* ViewController.swift */; };
+		3A8FD12221B73BD7005748CC /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD12121B73BD7005748CC /* ProfileSummaryView.swift */; };
 		3A8FD12521B73BD7005748CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A8FD12321B73BD7005748CC /* Main.storyboard */; };
 		3A8FD12821B73BD7005748CC /* PolarityTE.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD12621B73BD7005748CC /* PolarityTE.xcdatamodeld */; };
 		3A8FD12A21B73BDB005748CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A8FD12921B73BDB005748CC /* Assets.xcassets */; };
 		3A8FD12D21B73BDB005748CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A8FD12B21B73BDB005748CC /* LaunchScreen.storyboard */; };
+		3A8FD13521B7414A005748CC /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD13421B7414A005748CC /* ProfileView.swift */; };
+		3A8FD13721B7469D005748CC /* ProfileView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A8FD13621B7469D005748CC /* ProfileView.storyboard */; };
+		3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD13821B74789005748CC /* HTTP_Client.swift */; };
+		3A8FD14321B748B5005748CC /* URLS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14221B748B5005748CC /* URLS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3A8FD11C21B73BD7005748CC /* PolarityTE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PolarityTE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A8FD11F21B73BD7005748CC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3A8FD12121B73BD7005748CC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3A8FD12121B73BD7005748CC /* ProfileSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
 		3A8FD12421B73BD7005748CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3A8FD12721B73BD7005748CC /* PolarityTE.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PolarityTE.xcdatamodel; sourceTree = "<group>"; };
 		3A8FD12921B73BDB005748CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3A8FD12C21B73BDB005748CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A8FD12E21B73BDB005748CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A8FD13421B7414A005748CC /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		3A8FD13621B7469D005748CC /* ProfileView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProfileView.storyboard; sourceTree = "<group>"; };
+		3A8FD13821B74789005748CC /* HTTP_Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTP_Client.swift; sourceTree = "<group>"; };
+		3A8FD14221B748B5005748CC /* URLS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +64,67 @@
 		3A8FD11E21B73BD7005748CC /* PolarityTE */ = {
 			isa = PBXGroup;
 			children = (
-				3A8FD11F21B73BD7005748CC /* AppDelegate.swift */,
-				3A8FD12121B73BD7005748CC /* ViewController.swift */,
-				3A8FD12321B73BD7005748CC /* Main.storyboard */,
-				3A8FD12921B73BDB005748CC /* Assets.xcassets */,
-				3A8FD12B21B73BDB005748CC /* LaunchScreen.storyboard */,
-				3A8FD12E21B73BDB005748CC /* Info.plist */,
-				3A8FD12621B73BD7005748CC /* PolarityTE.xcdatamodeld */,
+				3A8FD14121B7482D005748CC /* Views */,
+				3A8FD14021B74816005748CC /* Support Files */,
+				3A8FD13E21B747E6005748CC /* Data Models */,
+				3A8FD13D21B747D6005748CC /* Constants */,
+				3A8FD13C21B747CF005748CC /* Extensions */,
+				3A8FD13B21B747C7005748CC /* Assets */,
+				3A8FD13821B74789005748CC /* HTTP_Client.swift */,
 			);
 			path = PolarityTE;
+			sourceTree = "<group>";
+		};
+		3A8FD13B21B747C7005748CC /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				3A8FD12921B73BDB005748CC /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		3A8FD13C21B747CF005748CC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3A8FD13D21B747D6005748CC /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				3A8FD14221B748B5005748CC /* URLS.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		3A8FD13E21B747E6005748CC /* Data Models */ = {
+			isa = PBXGroup;
+			children = (
+				3A8FD12621B73BD7005748CC /* PolarityTE.xcdatamodeld */,
+			);
+			path = "Data Models";
+			sourceTree = "<group>";
+		};
+		3A8FD14021B74816005748CC /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3A8FD12E21B73BDB005748CC /* Info.plist */,
+				3A8FD12B21B73BDB005748CC /* LaunchScreen.storyboard */,
+				3A8FD11F21B73BD7005748CC /* AppDelegate.swift */,
+			);
+			path = "Support Files";
+			sourceTree = "<group>";
+		};
+		3A8FD14121B7482D005748CC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3A8FD12321B73BD7005748CC /* Main.storyboard */,
+				3A8FD12121B73BD7005748CC /* ProfileSummaryView.swift */,
+				3A8FD13621B7469D005748CC /* ProfileView.storyboard */,
+				3A8FD13421B7414A005748CC /* ProfileView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A8FD12D21B73BDB005748CC /* LaunchScreen.storyboard in Resources */,
+				3A8FD13721B7469D005748CC /* ProfileView.storyboard in Resources */,
 				3A8FD12A21B73BDB005748CC /* Assets.xcassets in Resources */,
 				3A8FD12521B73BD7005748CC /* Main.storyboard in Resources */,
 			);
@@ -138,7 +199,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A8FD12221B73BD7005748CC /* ViewController.swift in Sources */,
+				3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */,
+				3A8FD14321B748B5005748CC /* URLS.swift in Sources */,
+				3A8FD13521B7414A005748CC /* ProfileView.swift in Sources */,
+				3A8FD12221B73BD7005748CC /* ProfileSummaryView.swift in Sources */,
 				3A8FD12021B73BD7005748CC /* AppDelegate.swift in Sources */,
 				3A8FD12821B73BD7005748CC /* PolarityTE.xcdatamodeld in Sources */,
 			);
@@ -288,7 +352,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U33ZFLNE92;
-				INFOPLIST_FILE = PolarityTE/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/PolarityTE/Support Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +370,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U33ZFLNE92;
-				INFOPLIST_FILE = PolarityTE/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/PolarityTE/Support Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

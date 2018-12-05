@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+struct urls {
+    static let baseURL = "https://q1o3gh76yb.execute-api.us-west-2.amazonaws.com/InterviewProd"
+    static let getUsers = "\(baseURL)/users"
+}

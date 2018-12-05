@@ -47,7 +47,7 @@ extension ProfileSummaryView: UITableViewDelegate, UITableViewDataSource {
 //  =================================================================================================
 extension ProfileSummaryView {
     @IBAction func newUser(_ sender: UIButton) {
-        
+        HTTP_Client.shared.createUser()
     }
 }
 
