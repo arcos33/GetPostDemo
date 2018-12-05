@@ -17,6 +17,8 @@
 		3A8FD13721B7469D005748CC /* ProfileView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A8FD13621B7469D005748CC /* ProfileView.storyboard */; };
 		3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD13821B74789005748CC /* HTTP_Client.swift */; };
 		3A8FD14321B748B5005748CC /* URLS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14221B748B5005748CC /* URLS.swift */; };
+		3A8FD14C21B75362005748CC /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14A21B75362005748CC /* User+CoreDataClass.swift */; };
+		3A8FD14D21B75362005748CC /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14B21B75362005748CC /* User+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		3A8FD13621B7469D005748CC /* ProfileView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProfileView.storyboard; sourceTree = "<group>"; };
 		3A8FD13821B74789005748CC /* HTTP_Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTP_Client.swift; sourceTree = "<group>"; };
 		3A8FD14221B748B5005748CC /* URLS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLS.swift; sourceTree = "<group>"; };
+		3A8FD14A21B75362005748CC /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3A8FD14B21B75362005748CC /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,8 @@
 		3A8FD13E21B747E6005748CC /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				3A8FD14A21B75362005748CC /* User+CoreDataClass.swift */,
+				3A8FD14B21B75362005748CC /* User+CoreDataProperties.swift */,
 				3A8FD12621B73BD7005748CC /* PolarityTE.xcdatamodeld */,
 			);
 			path = "Data Models";
@@ -119,12 +125,28 @@
 		3A8FD14121B7482D005748CC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3A8FD12321B73BD7005748CC /* Main.storyboard */,
+				3A8FD14F21B77E5B005748CC /* Profile View */,
+				3A8FD14E21B77E49005748CC /* Summary View */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3A8FD14E21B77E49005748CC /* Summary View */ = {
+			isa = PBXGroup;
+			children = (
 				3A8FD12121B73BD7005748CC /* ProfileSummaryView.swift */,
+				3A8FD12321B73BD7005748CC /* Main.storyboard */,
+			);
+			path = "Summary View";
+			sourceTree = "<group>";
+		};
+		3A8FD14F21B77E5B005748CC /* Profile View */ = {
+			isa = PBXGroup;
+			children = (
 				3A8FD13621B7469D005748CC /* ProfileView.storyboard */,
 				3A8FD13421B7414A005748CC /* ProfileView.swift */,
 			);
-			path = Views;
+			path = "Profile View";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,10 +223,12 @@
 			files = (
 				3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */,
 				3A8FD14321B748B5005748CC /* URLS.swift in Sources */,
+				3A8FD14D21B75362005748CC /* User+CoreDataProperties.swift in Sources */,
 				3A8FD13521B7414A005748CC /* ProfileView.swift in Sources */,
 				3A8FD12221B73BD7005748CC /* ProfileSummaryView.swift in Sources */,
 				3A8FD12021B73BD7005748CC /* AppDelegate.swift in Sources */,
 				3A8FD12821B73BD7005748CC /* PolarityTE.xcdatamodeld in Sources */,
+				3A8FD14C21B75362005748CC /* User+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
