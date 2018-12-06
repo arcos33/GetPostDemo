@@ -17,9 +17,9 @@ class ProfileSummaryView: UIViewController {
     var appDelegate: AppDelegate!
     var coreDataContext: NSManagedObjectContext!
     var rotationAngle: CGFloat = 0
+    var selectedUser: User?
     private let refreshControl = UIRefreshControl()
 
-    @IBOutlet weak var refreshImage: UIImageView!
     @IBOutlet weak var mainTable: UITableView!
     @IBOutlet weak var titleLBL: UILabel!
     
@@ -36,14 +36,26 @@ extension ProfileSummaryView {
         setupTable()
         updateCells()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SummaryView->ProfileView" {
+            if let vc = segue.destination as? ProfileView {
+                vc.profileViewDelegate = self
+                vc.userGuid = nil
+            }
+        }
+    }
 }
 
 //  =================================================================================================
-//  Private Methods
+//  Internal Methods
 //  =================================================================================================
 extension ProfileSummaryView {
     fileprivate func updateUsersArray(users: [User]) {
+        
         self.users = users
+        self.users.sort(by: {$0.name!.localizedCaseInsensitiveCompare($1.name!) == ComparisonResult.orderedAscending})
+        
         self.mainTable.reloadData()
         self.titleLBL.text = "\(users.count) Users"
     }
@@ -62,21 +74,58 @@ extension ProfileSummaryView {
     }
     
     @objc fileprivate func updateCells() {
+        print("hello")
         deleteUserRecords {
-            HTTP_Client.sharedHTTPClient.performRequestOfType(requestType: "GET") { (users) in
-                self.mainTable.refreshControl?.endRefreshing()
-                self.updateUsersArray(users: users)
-            }
+            HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (userDictionaries) in
+                var userArray = [User]()
+                let group = DispatchGroup()
+                // Clear out users array
+                self.users.removeAll()
+
+                for dict in userDictionaries {
+                    
+                    DispatchQueue.main.async(execute: {
+                        if (dict["name"] as? String == "Canelo") {
+                            
+                        }
+                        group.enter()
+                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                        let context = appDelegate.persistentContainer.viewContext
+                        let userEntity = NSEntityDescription.entity(forEntityName: "User", in: context)!
+                        let user = NSManagedObject(entity: userEntity, insertInto: context) as! User
+                        user.setValue(dict["name"] as? String ?? "unkwown", forKey: "name")
+                        user.setValue(dict["first_name"] as? String ?? "unkwown", forKey: "first_name")
+                        user.setValue(dict["last_name"] as? String ?? "unkwown", forKey: "last_name")
+                        user.setValue(dict["email"] as? String ?? "unkwown", forKey: "email")
+                        user.setValue(dict["phone_number"] as? String ?? "unkwown", forKey: "phone_number")
+                        user.setValue(dict["tenant"] as? String ?? "unkwown", forKey: "tenant")
+                        user.setValue(dict["zipcode"] as? String ?? "unkwown", forKey: "zipcode")
+                        user.setValue(dict["profile_photo"] as? String ?? "unkwown", forKey: "profile_photo")
+                        user.setValue(dict["guid"] as? String ?? "unknown", forKey: "guid")
+                        self.users.append(user)
+                        group.leave()
+                        
+                        do {
+                            try context.save()
+                        } catch let error as NSError {
+                            print("Could not save. \(error), \(error.userInfo)")
+                        }
+                    })
+                }
+                group.notify(queue: .main, execute: {
+                    self.mainTable.refreshControl?.endRefreshing()
+                    self.updateUsersArray(users: self.users)
+                })
+            })
             
-            rotateRefreshIcon()
+//            HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (users) in
+//                self.mainTable.refreshControl?.endRefreshing()
+//                self.updateUsersArray(users: users)
+//            })
+        
         }
-    }
-    
-    fileprivate func rotateRefreshIcon() {
-        UIView.animate(withDuration: 0.5) {
-            self.refreshImage.transform = CGAffineTransform(rotationAngle: 3 + self.rotationAngle)
-            self.rotationAngle += 360
-        }
+        
+
     }
     
     fileprivate func deleteUserRecords(_ completion: () -> ()) {
@@ -109,11 +158,29 @@ extension ProfileSummaryView: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = user.name
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "ProfileView", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "ProfileView") as? ProfileView {
+            let user = users[indexPath.row]
+            selectedUser = user
+            vc.userGuid = selectedUser?.guid
+            vc.profileViewDelegate = self
+            self.navigationController!.pushViewController(vc, animated: true)
+        }
+    
+        
+    }
 }
 
 //  =================================================================================================
-//  IBActions
+//  ProfileView Delegate Methods
 //  =================================================================================================
-extension ProfileSummaryView {
+extension ProfileSummaryView: ProfileViewDelegate {
+    func didTapBackButton() {
+        self.mainTable.beginRefreshing()
+        //updateCells()
+    }
+    
 
 }

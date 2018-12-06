@@ -25,5 +25,6 @@ extension User {
     @NSManaged public var first_name: String?
     @NSManaged public var last_name: String?
     @NSManaged public var profile_photo: String?
+    @NSManaged public var guid: String?
 
 }

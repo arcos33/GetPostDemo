@@ -7,74 +7,46 @@
 //
 
 import UIKit
-import CoreData
 
 typealias JSONObject = [String: Any]
 typealias HTTPStatusCode = Int
+typealias JSON = [String: Any]
+typealias Dict = [String: Any]
+typealias StatusCode = Int
 
-
+//  =================================================================================================
+//  iVars Methods
+//  =================================================================================================
 class HTTP_Client {
-
+    
     static let sharedHTTPClient = HTTP_Client()
     struct Authentication {
         static let name = "X-api-key"
         static let key = "TqzKu0n0kW7uI5GkghsK76jMxLa4Km0EadtnmSM7"
     }
+    let session = URLSession(configuration: URLSessionConfiguration.default)
     
-    func performRequestOfType(requestType: String, completion: @escaping ([User]) -> ()) {
-        let configuration = URLSessionConfiguration.default
-        let session = URLSession(configuration: configuration)
-        
+    
+}
+
+//  =================================================================================================
+//  API Methods
+//  =================================================================================================
+extension HTTP_Client {
+    func performGETRequest(completion: @escaping ([JSON]) -> ()) {
         let urlString = "\(urls.getUsers)"
         guard let url = URL(string: urlString) else { return }
-        var request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 5)
-        request.httpMethod = requestType
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 5)
+        request.httpMethod = "GET"
         request.addValue(Authentication.key, forHTTPHeaderField: Authentication.name)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        switch requestType {
-        case "POST" :
-            populateBody(request: &request)
-        case "GET":
-            break
-        default:
-            print("Other type of request: \(requestType)")
-        }
-        
-        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
             guard let data = data else { return }
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
-                        var users = [User]()
-                    for dict in json {
-                        
-                        DispatchQueue.main.async(execute: {
-                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                            let context = appDelegate.persistentContainer.viewContext
-                            let userEntity = NSEntityDescription.entity(forEntityName: "User", in: context)!
-                            let user = NSManagedObject(entity: userEntity, insertInto: context) as! User
-                            user.setValue(dict["name"] as? String ?? "unkwown", forKey: "name")
-                            user.setValue(dict["first_name"] as? String ?? "unkwown", forKey: "first_name")
-                            user.setValue(dict["last_name"] as? String ?? "unkwown", forKey: "last_name")
-                            user.setValue(dict["email"] as? String ?? "unkwown", forKey: "email")
-                            user.setValue(dict["phone_number"] as? String ?? "unkwown", forKey: "phone_number")
-                            user.setValue(dict["tenant"] as? String ?? "unkwown", forKey: "tenant")
-                            user.setValue(dict["zipcode"] as? String ?? "unkwown", forKey: "zipcode")
-                            user.setValue(dict["profile_photo"] as? String ?? "unkwown", forKey: "profile_photo")
-                            
-                            do {
-                                try context.save()
-                                users.append(user)
-                                completion(users)
-                            } catch let error as NSError {
-                                completion([User]())
-                                print("Could not save. \(error), \(error.userInfo)")
-                            }
-                        })
-
-                        
-                        
-                    }
+                    completion(json)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -83,16 +55,58 @@ class HTTP_Client {
         task.resume()
     }
     
-    fileprivate func populateBody(request: inout NSMutableURLRequest) {
+    func performPOSTRequest(user: UserObject, completion: @escaping (StatusCode) -> ()) {
+        let urlString = "\(urls.getUsers)"
+        guard let url = URL(string: urlString) else { return }
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 5)
+        request.httpMethod = "POST"
+        request.addValue(Authentication.key, forHTTPHeaderField: Authentication.name)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        populateBody(user: user, request: &request)
         
-        let params = [    "phone_number":"801-123-5555",
-                          "name":"Mike Tyson",
-                          "zipcode":"84065",
-                          "email":"mt@gmail.com",
-                          "tenant":"Punching time!",
-                          "first_name":"Mike",
-                          "last_name":"Tyson",
-                          "profile_photo":"test-image"]
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                completion(statusCode)
+            }
+        }
+        task.resume()
+    }
+    
+    func updateUser(user: UserObject, completion: @escaping (StatusCode) -> ()) {
+        let urlString = "\(urls.getUsers)/\(user.guid!)"
+        print(urlString)
+        guard let url = URL(string: urlString) else { return }
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 5)
+        request.httpMethod = "PATCH"
+        request.addValue(Authentication.key, forHTTPHeaderField: Authentication.name)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        populateBody(user: user, request: &request)
+        
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            let jsonString = String.init(data: data!, encoding: String.Encoding.utf8)
+            if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                completion(statusCode)
+                
+            }
+        }
+        task.resume()
+    }
+}
+
+//  =================================================================================================
+//  Internal Methods
+//  =================================================================================================
+extension HTTP_Client {
+    
+    internal func populateBody(user: UserObject, request: inout URLRequest) {
+        let params = [    "phone_number":user.phone!,
+                      "name":user.name!,
+                      "zipcode":user.zip!,
+                      "email":user.email!,
+                      "tenant":user.tenant!,
+                      "first_name":user.first_name!,
+                      "last_name":user.last_name!,
+                      "profile_photo":user.photo!]
         
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
@@ -100,5 +114,4 @@ class HTTP_Client {
             print(error.localizedDescription)
         }
     }
-    
 }
