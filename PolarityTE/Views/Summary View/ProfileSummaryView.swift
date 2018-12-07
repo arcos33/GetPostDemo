@@ -34,7 +34,9 @@ extension ProfileSummaryView {
         self.appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.coreDataContext = appDelegate.persistentContainer.viewContext
         setupTable()
-        updateCells()
+        //updateCells()
+        self.mainTable.beginRefreshing()
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -74,10 +76,8 @@ extension ProfileSummaryView {
     }
     
     @objc fileprivate func updateCells() {
-        print("hello")
         deleteUserRecords {
             HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (userDictionaries) in
-                var userArray = [User]()
                 let group = DispatchGroup()
                 // Clear out users array
                 self.users.removeAll()
@@ -85,9 +85,6 @@ extension ProfileSummaryView {
                 for dict in userDictionaries {
                     
                     DispatchQueue.main.async(execute: {
-                        if (dict["name"] as? String == "Canelo") {
-                            
-                        }
                         group.enter()
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                         let context = appDelegate.persistentContainer.viewContext
@@ -117,15 +114,7 @@ extension ProfileSummaryView {
                     self.updateUsersArray(users: self.users)
                 })
             })
-            
-//            HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (users) in
-//                self.mainTable.refreshControl?.endRefreshing()
-//                self.updateUsersArray(users: users)
-//            })
-        
         }
-        
-
     }
     
     fileprivate func deleteUserRecords(_ completion: () -> ()) {
@@ -139,7 +128,7 @@ extension ProfileSummaryView {
             try coreDataContext.execute(batchDeleteRequest)
             completion()
         } catch {
-            // Error Handling
+            print(error.localizedDescription)
         }
     }
 }
@@ -168,8 +157,6 @@ extension ProfileSummaryView: UITableViewDelegate, UITableViewDataSource {
             vc.profileViewDelegate = self
             self.navigationController!.pushViewController(vc, animated: true)
         }
-    
-        
     }
 }
 
@@ -179,8 +166,5 @@ extension ProfileSummaryView: UITableViewDelegate, UITableViewDataSource {
 extension ProfileSummaryView: ProfileViewDelegate {
     func didTapBackButton() {
         self.mainTable.beginRefreshing()
-        //updateCells()
     }
-    
-
 }

@@ -74,7 +74,6 @@ extension HTTP_Client {
     
     func updateUser(user: UserObject, completion: @escaping (StatusCode) -> ()) {
         let urlString = "\(urls.getUsers)/\(user.guid!)"
-        print(urlString)
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 5)
         request.httpMethod = "PATCH"
@@ -83,10 +82,8 @@ extension HTTP_Client {
         populateBody(user: user, request: &request)
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-            let jsonString = String.init(data: data!, encoding: String.Encoding.utf8)
             if let statusCode = (response as? HTTPURLResponse)?.statusCode {
                 completion(statusCode)
-                
             }
         }
         task.resume()

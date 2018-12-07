@@ -69,7 +69,7 @@ extension ProfileView {
                 self.phoneNumberTF.text = user.phone_number
                 self.zipCodeTF.text = user.zipcode
                 self.tenantTF.text = user.tenant
-                self.avatarImage.image = user.profile_photo?.convertBase64ToImage()
+                self.avatarImage.image = user.profile_photo?.convertBase64ToImage() != nil ? user.profile_photo?.convertBase64ToImage() : #imageLiteral(resourceName: "man-user")
             }
         } else {
             self.submitBTN.setTitle("Create User", for: .normal)
@@ -191,7 +191,7 @@ extension ProfileView: UIImagePickerControllerDelegate, UINavigationControllerDe
     func photoLibrary(){
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
             let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+            myPickerController.delegate = self //as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
             myPickerController.sourceType = .photoLibrary
             self.present(myPickerController, animated: true, completion: nil)
         }
