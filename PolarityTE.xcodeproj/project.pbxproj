@@ -23,6 +23,7 @@
 		3A8FD14C21B75362005748CC /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14A21B75362005748CC /* User+CoreDataClass.swift */; };
 		3A8FD14D21B75362005748CC /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD14B21B75362005748CC /* User+CoreDataProperties.swift */; };
 		3A8FD15521B84BF0005748CC /* TableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8FD15421B84BF0005748CC /* TableView+Extension.swift */; };
+		3A97105D21BA124900E38665 /* ProfileSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A97105C21BA124900E38665 /* ProfileSummaryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		3A8FD14A21B75362005748CC /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3A8FD14B21B75362005748CC /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3A8FD15421B84BF0005748CC /* TableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Extension.swift"; sourceTree = "<group>"; };
+		3A97105C21BA124900E38665 /* ProfileSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 			children = (
 				3A8FD12121B73BD7005748CC /* ProfileSummaryView.swift */,
 				3A8FD12321B73BD7005748CC /* Main.storyboard */,
+				3A97105C21BA124900E38665 /* ProfileSummaryCell.swift */,
 			);
 			path = "Summary View";
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */,
+				3A97105D21BA124900E38665 /* ProfileSummaryCell.swift in Sources */,
 				3A85586F21B8BB460021F261 /* UIImage+Extension.swift in Sources */,
 				3A8FD15521B84BF0005748CC /* TableView+Extension.swift in Sources */,
 				3A8FD14321B748B5005748CC /* URLS.swift in Sources */,
