@@ -13,5 +13,4 @@ extension UIImage {
         let imageData = self.pngData()
         return imageData!.base64EncodedString()
     }
-    
 }

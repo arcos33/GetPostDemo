@@ -33,6 +33,9 @@ class ProfileView: UIViewController {
     var userGuid: String!
     var profileViewDelegate: ProfileViewDelegate!
     var didInteractWithUser = false
+    var viewAdjustment: CGFloat = 0
+    var isShowingLowerHalfOfScreen = false
+    
     
     @IBOutlet weak var avatarImage: UIImageView!
     @IBOutlet weak var nameTF: UITextField!
@@ -46,34 +49,34 @@ class ProfileView: UIViewController {
 }
 
 //  =================================================================================================
-//  UITextField delegate methods
-//  =================================================================================================
-extension ProfileView: UITextFieldDelegate {
-    @objc func textFieldDidChange(_ textField: UITextField) {
-    }
-}
-
-//  =================================================================================================
 //  Lifecycle
 //  =================================================================================================
 extension ProfileView {
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let id = self.userGuid {
-            self.submitBTN.setTitle("Update User", for: .normal)
-            fetchUserWithId(guid: id) { (user) in
-                self.nameTF.text = user.name
-                self.firstNameTF.text = user.first_name
-                self.lastNameTF.text = user.last_name
-                self.emailTF.text = user.email
-                self.phoneNumberTF.text = user.phone_number
-                self.zipCodeTF.text = user.zipcode
-                self.tenantTF.text = user.tenant
-                self.avatarImage.image = user.profile_photo?.convertBase64ToImage() != nil ? user.profile_photo?.convertBase64ToImage() : #imageLiteral(resourceName: "man-user")
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        findSelectedUser()
+    }
+}
+
+//  =================================================================================================
+//  UITextField delegate methods
+//  =================================================================================================
+extension ProfileView: UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if !isShowingLowerHalfOfScreen {
+            UIView.animate(withDuration: 0.5) {
+                self.view.frame.origin.y -= self.viewAdjustment
             }
-        } else {
-            self.submitBTN.setTitle("Create User", for: .normal)
+            isShowingLowerHalfOfScreen = true
         }
+        return true
     }
 }
 
@@ -112,6 +115,25 @@ extension ProfileView {
 //  Internal methods
 //  =================================================================================================
 extension ProfileView {
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.viewAdjustment = keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+        isShowingLowerHalfOfScreen = false
+    }
+    
+    
+    
     fileprivate func getContext() -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
@@ -132,6 +154,24 @@ extension ProfileView {
             }
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    internal func findSelectedUser() {
+        if let id = self.userGuid {
+            self.submitBTN.setTitle("Update User", for: .normal)
+            fetchUserWithId(guid: id) { (user) in
+                self.nameTF.text = user.name
+                self.firstNameTF.text = user.first_name
+                self.lastNameTF.text = user.last_name
+                self.emailTF.text = user.email
+                self.phoneNumberTF.text = user.phone_number
+                self.zipCodeTF.text = user.zipcode
+                self.tenantTF.text = user.tenant
+                self.avatarImage.image = user.profile_photo?.convertBase64ToImage() != nil ? user.profile_photo?.convertBase64ToImage() : #imageLiteral(resourceName: "man-user")
+            }
+        } else {
+            self.submitBTN.setTitle("Create User", for: .normal)
         }
     }
     
@@ -191,7 +231,7 @@ extension ProfileView: UIImagePickerControllerDelegate, UINavigationControllerDe
     func photoLibrary(){
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
             let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self //as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+            myPickerController.delegate = self
             myPickerController.sourceType = .photoLibrary
             self.present(myPickerController, animated: true, completion: nil)
         }

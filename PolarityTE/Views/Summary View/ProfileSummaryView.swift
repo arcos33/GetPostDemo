@@ -14,9 +14,6 @@ import CoreData
 class ProfileSummaryView: UIViewController {
     static let cellIdentifier = "cellId"
     var users = [User]()
-    var appDelegate: AppDelegate!
-    var coreDataContext: NSManagedObjectContext!
-    var rotationAngle: CGFloat = 0
     var selectedUser: User?
     private let refreshControl = UIRefreshControl()
 
@@ -31,12 +28,8 @@ class ProfileSummaryView: UIViewController {
 extension ProfileSummaryView {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.appDelegate = UIApplication.shared.delegate as? AppDelegate
-        self.coreDataContext = appDelegate.persistentContainer.viewContext
         setupTable()
-        //updateCells()
         self.mainTable.beginRefreshing()
-
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -53,6 +46,11 @@ extension ProfileSummaryView {
 //  Internal Methods
 //  =================================================================================================
 extension ProfileSummaryView {
+    fileprivate func getContext() -> NSManagedObjectContext {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }
+    
     fileprivate func updateUsersArray(users: [User]) {
         
         self.users = users
@@ -77,17 +75,25 @@ extension ProfileSummaryView {
     
     @objc fileprivate func updateCells() {
         deleteUserRecords {
-            HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (userDictionaries) in
+            HTTP_Client.sharedHTTPClient.performGETRequest(completion: { (userDictionaries, message)  in
+                guard let dictionaries = userDictionaries else {
+                    if let message = message {
+                        DispatchQueue.main.sync(execute: {
+                            self.showAlert(message: message, closeTitle: "Close", callback: { (action) in
+                                self.refreshControl.endRefreshing()
+                            })
+                        })
+                    }
+                    return
+                }
                 let group = DispatchGroup()
                 // Clear out users array
                 self.users.removeAll()
-
-                for dict in userDictionaries {
+                for dict in dictionaries {
                     
                     DispatchQueue.main.async(execute: {
                         group.enter()
-                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                        let context = appDelegate.persistentContainer.viewContext
+                        let context = self.getContext()
                         let userEntity = NSEntityDescription.entity(forEntityName: "User", in: context)!
                         let user = NSManagedObject(entity: userEntity, insertInto: context) as! User
                         user.setValue(dict["name"] as? String ?? "unkwown", forKey: "name")
@@ -125,7 +131,8 @@ extension ProfileSummaryView {
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
         do {
-            try coreDataContext.execute(batchDeleteRequest)
+            let context = getContext()
+            try context.execute(batchDeleteRequest)
             completion()
         } catch {
             print(error.localizedDescription)
