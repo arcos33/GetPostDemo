@@ -9,7 +9,6 @@
 import UIKit
 
 class ProfileSummaryCell: UITableViewCell {
-    
     @IBOutlet weak var title: UILabel!
-    
+    @IBOutlet weak var profilePhotoIV: UIImageView!
 }

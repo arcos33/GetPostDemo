@@ -89,25 +89,16 @@ extension ProfileView {
     }
     
     @IBAction func createUser(_ sender: UIButton) {
-        if (self.nameTF.text?.isEmpty)! ||
-            (self.firstNameTF.text?.isEmpty)! ||
-            (self.lastNameTF.text?.isEmpty)! ||
-            (self.emailTF.text?.isEmpty)! ||
-            (self.phoneNumberTF.text?.isEmpty)! ||
-            (self.zipCodeTF.text?.isEmpty)! ||
-            (self.tenantTF.text?.isEmpty)! ||
-            (self.avatarImage.image == nil){
-            self.showAlert(message: "All fields must be entered and an image must be seleted to update", closeTitle: "Close", callback: nil)
-            return
-        }
-        didInteractWithUser = true
-        
-        if self.submitBTN.titleLabel?.text == "Update User" {
-            updateUser()
+        if (isRequiredDataInputed() == true) {
+            didInteractWithUser = true
+            if self.submitBTN.titleLabel?.text == "Update User" {
+                updateUser()
+            } else {
+                createNewUser()
+            }
         } else {
-            createNewUser()
+            self.showAlert(message: "All fields must be entered and an image must be seleted to update", closeTitle: "Close", callback: nil)
         }
-        
     }
 }
 
@@ -115,6 +106,79 @@ extension ProfileView {
 //  Internal methods
 //  =================================================================================================
 extension ProfileView {
+    internal func insertUserRecord(withGUID guid: String, _ user: UserObject, completion: @escaping ()->Void) {
+        DispatchQueue.main.async {
+            let context = self.getContext()
+            let entity = NSEntityDescription.entity(forEntityName: "User", in: context)
+            let newUser = NSManagedObject(entity: entity!, insertInto: context)
+            newUser.setValue(guid, forKey: FieldNames.guid)
+            newUser.setValue(user.name, forKey: FieldNames.name)
+            newUser.setValue(user.first_name, forKey: FieldNames.fName)
+            newUser.setValue(user.last_name, forKey: FieldNames.lName)
+            newUser.setValue(user.email, forKey: FieldNames.email)
+            newUser.setValue(user.phone, forKey: FieldNames.phone)
+            newUser.setValue(user.tenant, forKey: FieldNames.tenant)
+            newUser.setValue(user.photo, forKey: FieldNames.photo)
+            newUser.setValue(user.zip, forKey: FieldNames.zip)
+            do {
+                try context.save()
+                completion()
+            } catch {
+                print("Failed saving")
+            }
+        }
+    }
+    
+    internal func isRequiredDataInputed() -> Bool {
+        if (self.nameTF.text?.isEmpty)! ||
+            (self.firstNameTF.text?.isEmpty)! ||
+            (self.lastNameTF.text?.isEmpty)! ||
+            (self.emailTF.text?.isEmpty)! ||
+            (self.phoneNumberTF.text?.isEmpty)! ||
+            (self.zipCodeTF.text?.isEmpty)! ||
+            (self.tenantTF.text?.isEmpty)! ||
+            (self.avatarImage.image == #imageLiteral(resourceName: "man-user") ){
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    internal func updateCoreDataRecord(withGUID guid: String, _ completion: @escaping Closure) {
+        DispatchQueue.main.async {
+            let fetchRequest = NSFetchRequest<User>(entityName: "User")
+            fetchRequest.returnsObjectsAsFaults = false
+            
+            fetchRequest.predicate = NSPredicate(format: "guid = %@",
+                                                 argumentArray: [guid])
+            
+            do {
+                let results = try self.getContext().fetch(fetchRequest)
+                
+                if results.count != 0 {
+                    results[0].setValue(self.nameTF.text!, forKey: FieldNames.name)
+                    results[0].setValue(self.firstNameTF.text!, forKey: FieldNames.fName)
+                    results[0].setValue(self.lastNameTF.text!, forKey: FieldNames.lName)
+                    results[0].setValue(self.zipCodeTF.text!, forKey: FieldNames.zip)
+                    results[0].setValue(self.phoneNumberTF.text!, forKey: FieldNames.phone)
+                    results[0].setValue(self.tenantTF.text!, forKey: FieldNames.tenant)
+                    results[0].setValue(self.avatarImage.image?.convertImageToBase64(), forKey: FieldNames.photo)
+                    results[0].setValue(self.emailTF.text!, forKey: FieldNames.email)
+                }
+            } catch {
+                print("Fetch Failed: \(error)")
+            }
+            
+            do {
+                try self.getContext().save()
+                completion()
+            }
+            catch {
+                print("Saving Core Data Failed: \(error)")
+            }
+        }
+    }
+    
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0 {
@@ -125,35 +189,35 @@ extension ProfileView {
     
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
+            if self.view.frame.origin.y != 0 {
                 self.view.frame.origin.y += keyboardSize.height
             }
         }
         isShowingLowerHalfOfScreen = false
     }
     
-    
-    
-    fileprivate func getContext() -> NSManagedObjectContext {
+    internal func getContext() -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
     
-    func fetchUserWithId(guid: String, completion: (User) -> ()) {
-        let context = getContext()
-        let fetchRequest:NSFetchRequest<User> = User.fetchRequest()
-        let predicate = NSPredicate(format: "guid = %d", argumentArray: [guid])
-        fetchRequest.predicate = predicate
-        let nameSort = NSSortDescriptor(key:"name", ascending:true)
-        
-        fetchRequest.sortDescriptors = [nameSort]
-        do {
-            let users = try context.fetch(fetchRequest)
-            if let user = users.first {
-                completion(user)
+    func fetchUserWithId(guid: String, completion: @escaping (User) -> ()) {
+        DispatchQueue.main.async {
+            let context = self.getContext()
+            let fetchRequest:NSFetchRequest<User> = User.fetchRequest()
+            let predicate = NSPredicate(format: "guid = %d", argumentArray: [guid])
+            fetchRequest.predicate = predicate
+            let nameSort = NSSortDescriptor(key:"name", ascending:true)
+            
+            fetchRequest.sortDescriptors = [nameSort]
+            do {
+                let users = try context.fetch(fetchRequest)
+                if let user = users.first {
+                    completion(user)
+                }
+            } catch {
+                print(error.localizedDescription)
             }
-        } catch {
-            print(error.localizedDescription)
         }
     }
     
@@ -178,12 +242,13 @@ extension ProfileView {
     internal func createNewUser() {
         let user = populateUserObject()
         
-        HTTP_Client.sharedHTTPClient.performPOSTRequest(user: user) { (statusCode) in
+        HTTP_Client.sharedHTTPClient.performPOSTRequest(user: user) { (statusCode, guid)  in
             if statusCode == 201 {
-                print("Record created Successfully")
-                DispatchQueue.main.sync(execute: {
-                    self.profileViewDelegate.didTapBackButton()
-                    self.navigationController?.popViewController(animated: true)
+                self.insertUserRecord(withGUID:guid, user, completion: {
+                    self.showAlert(message: "Record was created successfully", closeTitle: "Close", callback: { (action) in
+                        self.profileViewDelegate.didTapBackButton()
+                        self.navigationController?.popViewController(animated: true)
+                    })
                 })
             }
         }
@@ -194,11 +259,12 @@ extension ProfileView {
         
         HTTP_Client.sharedHTTPClient.updateUser(user: user) { (statusCode) in
             if statusCode == 204 {
-                self.didInteractWithUser = true
-                print("Record updated Successfully")
-                DispatchQueue.main.sync(execute: {
-                    self.profileViewDelegate.didTapBackButton()
-                    self.navigationController?.popViewController(animated: true)
+                self.updateCoreDataRecord(withGUID: user.guid!, {
+                    self.didInteractWithUser = true
+                    self.showAlert(message: "Record updated Successfully", closeTitle: "OK", callback: { (action) in
+                        self.navigationController?.popViewController(animated: true)
+                        self.profileViewDelegate.didTapBackButton()
+                    })
                 })
             }
         }
@@ -213,7 +279,7 @@ extension ProfileView {
         user.email = emailTF.text!
         user.tenant = tenantTF.text!
         user.zip = zipCodeTF.text!
-        user.photo = self.avatarImage.image?.convertImageToBase64()
+        user.photo = self.avatarImage.image?.convertImageToBase64() ?? ""
         if self.submitBTN.titleLabel?.text == "Update User" {
             user.guid = userGuid
         } else {
