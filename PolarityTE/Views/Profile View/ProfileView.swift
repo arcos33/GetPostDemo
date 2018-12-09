@@ -104,7 +104,7 @@ extension ProfileView {
 }
 
 //  =================================================================================================
-//  Internal methods
+//  Core Data methods
 //  =================================================================================================
 extension ProfileView {
     internal func insertUserRecord(withGUID guid: String, _ user: UserObject, completion: @escaping ()->Void) {
@@ -127,21 +127,6 @@ extension ProfileView {
             } catch {
                 print("Failed saving")
             }
-        }
-    }
-    
-    internal func isRequiredDataInputed() -> Bool {
-        if (self.nameTF.text?.isEmpty)! ||
-            (self.firstNameTF.text?.isEmpty)! ||
-            (self.lastNameTF.text?.isEmpty)! ||
-            (self.emailTF.text?.isEmpty)! ||
-            (self.phoneNumberTF.text?.isEmpty)! ||
-            (self.zipCodeTF.text?.isEmpty)! ||
-            (self.tenantTF.text?.isEmpty)! ||
-            (self.avatarImage.image == #imageLiteral(resourceName: "man-user") ){
-            return false
-        } else {
-            return true
         }
     }
     
@@ -180,23 +165,6 @@ extension ProfileView {
         }
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.viewAdjustment = keyboardSize.height
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height
-            }
-        }
-        isShowingLowerHalfOfScreen = false
-    }
-    
     internal func getContext() -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
@@ -221,7 +189,50 @@ extension ProfileView {
             }
         }
     }
+}
+
+//  =================================================================================================
+//  Keyboard Notification methods
+//  =================================================================================================
+extension ProfileView {
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.viewAdjustment = keyboardSize.height
+            }
+        }
+    }
     
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+        isShowingLowerHalfOfScreen = false
+    }
+}
+
+//  =================================================================================================
+//  Internal methods
+//  =================================================================================================
+extension ProfileView {
+    
+    internal func isRequiredDataInputed() -> Bool {
+        if (self.nameTF.text?.isEmpty)! ||
+            (self.firstNameTF.text?.isEmpty)! ||
+            (self.lastNameTF.text?.isEmpty)! ||
+            (self.emailTF.text?.isEmpty)! ||
+            (self.phoneNumberTF.text?.isEmpty)! ||
+            (self.zipCodeTF.text?.isEmpty)! ||
+            (self.tenantTF.text?.isEmpty)! ||
+            (self.avatarImage.image == #imageLiteral(resourceName: "man-user") ){
+            return false
+        } else {
+            return true
+        }
+    }
+
     internal func findSelectedUser() {
         if let id = self.userGuid {
             self.submitBTN.setTitle("Update User", for: .normal)
