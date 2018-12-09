@@ -91,6 +91,7 @@ extension ProfileView {
     @IBAction func createUser(_ sender: UIButton) {
         if (isRequiredDataInputed() == true) {
             didInteractWithUser = true
+            
             if self.submitBTN.titleLabel?.text == "Update User" {
                 updateUser()
             } else {
@@ -240,9 +241,16 @@ extension ProfileView {
     }
     
     internal func createNewUser() {
+        DispatchQueue.main.async {
+            self.showActivityIndicatorOverlay()
+        }
+        
         let user = populateUserObject()
         
         HTTP_Client.sharedHTTPClient.performPOSTRequest(user: user) { (statusCode, guid)  in
+            DispatchQueue.main.sync(execute: {
+                self.hideActivityIndicatorOverlay()
+            })
             if statusCode == 201 {
                 self.insertUserRecord(withGUID:guid, user, completion: {
                     self.showAlert(message: "Record was created successfully", closeTitle: "Close", callback: { (action) in
@@ -250,14 +258,23 @@ extension ProfileView {
                         self.navigationController?.popViewController(animated: true)
                     })
                 })
+            } else {
+                self.showAlert(message: "Problem creating user, status:\(statusCode)", closeTitle: "OK", callback: nil)
             }
         }
     }
     
     internal func updateUser() {
+        DispatchQueue.main.async {
+            self.showActivityIndicatorOverlay()
+        }
+        
         let user = populateUserObject()
         
         HTTP_Client.sharedHTTPClient.updateUser(user: user) { (statusCode) in
+            DispatchQueue.main.async(execute: {
+                self.hideActivityIndicatorOverlay()
+            })
             if statusCode == 204 {
                 self.updateCoreDataRecord(withGUID: user.guid!, {
                     self.didInteractWithUser = true
@@ -266,6 +283,8 @@ extension ProfileView {
                         self.profileViewDelegate.didTapBackButton()
                     })
                 })
+            } else {
+                self.showAlert(message: "Problem updating, status:\(statusCode)", closeTitle: "OK", callback: nil)
             }
         }
     }

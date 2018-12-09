@@ -31,6 +31,7 @@ class ProfileSummaryView: UIViewController {
 extension ProfileSummaryView {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupTable()
         fetchCoreDataForAllUserRecords { (users) in
             self.updateUsersArray(users: users)
