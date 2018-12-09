@@ -252,12 +252,14 @@ extension ProfileView {
     }
     
     internal func createNewUser() {
-        DispatchQueue.main.async {
-            self.showActivityIndicatorOverlay()
-        }
+        DispatchQueue.main.async { self.showActivityIndicatorOverlay() }
         
+        performPOSTRequestAndSaveToCoreData()
+    }
+    
+    internal func performPOSTRequestAndSaveToCoreData() {
         let user = populateUserObject()
-        
+
         HTTP_Client.sharedHTTPClient.performPOSTRequest(user: user) { (statusCode, guid)  in
             DispatchQueue.main.sync(execute: {
                 self.hideActivityIndicatorOverlay()
@@ -276,10 +278,12 @@ extension ProfileView {
     }
     
     internal func updateUser() {
-        DispatchQueue.main.async {
-            self.showActivityIndicatorOverlay()
-        }
+        DispatchQueue.main.async { self.showActivityIndicatorOverlay() }
         
+        performPATCHRequestAndUpdateCoreData()
+    }
+    
+    internal func performPATCHRequestAndUpdateCoreData() {
         let user = populateUserObject()
         
         HTTP_Client.sharedHTTPClient.updateUser(user: user) { (statusCode) in
