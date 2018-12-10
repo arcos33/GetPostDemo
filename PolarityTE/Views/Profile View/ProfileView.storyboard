@@ -94,6 +94,9 @@
                                                         <include reference="lUc-gN-WqC"/>
                                                     </mask>
                                                 </variation>
+                                                <connections>
+                                                    <outlet property="delegate" destination="0RE-5v-fHP" id="fTP-qv-ajZ"/>
+                                                </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o9a-FE-Q6k">
                                                 <rect key="frame" x="0.0" y="74" width="443" height="60"/>
@@ -103,6 +106,9 @@
                                                 <variation key="heightClass=regular-widthClass=regular">
                                                     <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                                 </variation>
+                                                <connections>
+                                                    <outlet property="delegate" destination="0RE-5v-fHP" id="XqG-7R-INY"/>
+                                                </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uqt-NK-tER">
                                                 <rect key="frame" x="0.0" y="214" width="443" height="60"/>
@@ -126,6 +132,9 @@
                                                         <exclude reference="mBA-Nv-8XM"/>
                                                     </mask>
                                                 </variation>
+                                                <connections>
+                                                    <outlet property="delegate" destination="0RE-5v-fHP" id="vY2-CS-CDa"/>
+                                                </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WCj-qT-TuR">
                                                 <rect key="frame" x="0.0" y="144" width="443" height="60"/>
@@ -149,6 +158,9 @@
                                                         <exclude reference="ZoK-uT-mt8"/>
                                                     </mask>
                                                 </variation>
+                                                <connections>
+                                                    <outlet property="delegate" destination="0RE-5v-fHP" id="wLH-4Z-OJk"/>
+                                                </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hbP-en-xxa">
                                                 <rect key="frame" x="0.0" y="284" width="443" height="60"/>

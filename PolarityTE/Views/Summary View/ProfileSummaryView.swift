@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-typealias Closure = () -> ()
+typealias Closure = () -> Void
 
 //  =================================================================================================
 //  iVars

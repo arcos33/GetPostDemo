@@ -25,7 +25,7 @@ struct UserObject {
     var guid: String? = nil
 }
 
-
+private var myContext = 0
 //  =================================================================================================
 //  iVars
 //  =================================================================================================
@@ -35,8 +35,8 @@ class ProfileView: UIViewController {
     var didInteractWithUser = false
     var viewAdjustment: CGFloat = 0
     var isShowingLowerHalfOfScreen = false
-    
-    
+    @objc var statemachine = StateMachine()
+
     @IBOutlet weak var avatarImage: UIImageView!
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var lastNameTF: UITextField!
@@ -54,13 +54,36 @@ class ProfileView: UIViewController {
 extension ProfileView {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+        addObserver(self, forKeyPath: #keyPath(statemachine.currentState), options: [.old, .new], context: &myContext)
+        self.statemachine.setNewState(self.statemachine.initialState!)
         self.hideKeyboardWhenTappedAround()
-        
-        findSelectedUser()
+        findSelectedUser {
+            if self.isRequiredDataInputed() == true {
+                self.statemachine.validate(completed: true)
+            }
+        }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if context == &myContext {
+            if let newState = change?[.newKey] as? ProfileState {
+                switch newState {
+                case is InitialState:
+                    submitBTN.isEnabled = false
+                    print("no input")
+                case is SomeInputReceived:
+                    submitBTN.isEnabled = false
+                    print("some input")
+                case is FinalState:
+                    submitBTN.isEnabled = true
+                    print("final state")
+                default:
+                    print("undefined state")
+                }
+            }
+        }
     }
 }
 
@@ -70,11 +93,22 @@ extension ProfileView {
 extension ProfileView: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if !isShowingLowerHalfOfScreen {
-            UIView.animate(withDuration: 0.5) {
-                self.view.frame.origin.y -= self.viewAdjustment
+        if textField == phoneNumberTF || textField == zipCodeTF || textField == tenantTF {
+            if !isShowingLowerHalfOfScreen {
+                UIView.animate(withDuration: 1.0) {
+                    self.view.frame.origin.y -= self.viewAdjustment
+                }
+                isShowingLowerHalfOfScreen = true
             }
-            isShowingLowerHalfOfScreen = true
+        }
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if isRequiredDataInputed() == true {
+            self.statemachine.validate(completed: true)
+        } else {
+            self.statemachine.validate(completed: false)
         }
         return true
     }
@@ -217,7 +251,6 @@ extension ProfileView {
 //  Internal methods
 //  =================================================================================================
 extension ProfileView {
-    
     internal func isRequiredDataInputed() -> Bool {
         if (self.nameTF.text?.isEmpty)! ||
             (self.firstNameTF.text?.isEmpty)! ||
@@ -233,7 +266,7 @@ extension ProfileView {
         }
     }
 
-    internal func findSelectedUser() {
+    internal func findSelectedUser(completion: @escaping Closure) {
         if let id = self.userGuid {
             self.submitBTN.setTitle("Update User", for: .normal)
             fetchUserWithId(guid: id) { (user) in
@@ -245,6 +278,7 @@ extension ProfileView {
                 self.zipCodeTF.text = user.zipcode
                 self.tenantTF.text = user.tenant
                 self.avatarImage.image = user.profile_photo?.convertBase64ToImage() != nil ? user.profile_photo?.convertBase64ToImage() : #imageLiteral(resourceName: "man-user")
+                completion()
             }
         } else {
             self.submitBTN.setTitle("Create User", for: .normal)
@@ -341,6 +375,10 @@ extension ProfileView: UIImagePickerControllerDelegate, UINavigationControllerDe
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             let scaledImage = scaleImage(with: image, scaledTo: CGSize.init(width: 400, height: 400))
             self.avatarImage.image = scaledImage
+            if isRequiredDataInputed() == true {
+                self.statemachine.validate(completed: true)
+            }
+            
             self.dismiss(animated: true, completion: nil)
         } else{
             print("Something went wrong with image")

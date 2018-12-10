@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A4DF18B21BCD83400C033D5 /* UIViewController+ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4DF18A21BCD83400C033D5 /* UIViewController+ActivityIndicator.swift */; };
+		3A4DF19121BE177500C033D5 /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4DF19021BE177500C033D5 /* StateMachine.swift */; };
 		3A85586D21B8BAD90021F261 /* UIViewController+HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A85586C21B8BAD90021F261 /* UIViewController+HideKeyboard.swift */; };
 		3A85586F21B8BB460021F261 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A85586E21B8BB460021F261 /* UIImage+Extension.swift */; };
 		3A85587121B8BC380021F261 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A85587021B8BC380021F261 /* String+Extension.swift */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		3A4DF18A21BCD83400C033D5 /* UIViewController+ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+ActivityIndicator.swift"; sourceTree = "<group>"; };
+		3A4DF19021BE177500C033D5 /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		3A85586C21B8BAD90021F261 /* UIViewController+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+HideKeyboard.swift"; sourceTree = "<group>"; };
 		3A85586E21B8BB460021F261 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		3A85587021B8BC380021F261 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				3A8FD13421B7414A005748CC /* ProfileView.swift */,
 				3A8FD13621B7469D005748CC /* ProfileView.storyboard */,
+				3A4DF19021BE177500C033D5 /* StateMachine.swift */,
 			);
 			path = "Profile View";
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				3A4DF18B21BCD83400C033D5 /* UIViewController+ActivityIndicator.swift in Sources */,
 				3A8FD13921B7478A005748CC /* HTTP_Client.swift in Sources */,
 				3A97105D21BA124900E38665 /* ProfileSummaryCell.swift in Sources */,
+				3A4DF19121BE177500C033D5 /* StateMachine.swift in Sources */,
 				3A85586F21B8BB460021F261 /* UIImage+Extension.swift in Sources */,
 				3A8FD15521B84BF0005748CC /* TableView+Extension.swift in Sources */,
 				3A8FD14321B748B5005748CC /* URLS.swift in Sources */,
