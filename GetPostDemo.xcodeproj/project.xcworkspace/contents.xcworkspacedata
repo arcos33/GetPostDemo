@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:PolarityTE.xcodeproj">
+      location = "self:/Users/user/Desktop/polarity_practice_test/PolarityTE/GetPostDemo.xcodeproj">
    </FileRef>
 </Workspace>

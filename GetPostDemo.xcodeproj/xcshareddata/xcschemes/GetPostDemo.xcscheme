@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3A8FD11B21B73BD7005748CC"
-               BuildableName = "PolarityTE.app"
-               BlueprintName = "PolarityTE"
-               ReferencedContainer = "container:PolarityTE.xcodeproj">
+               BuildableName = "GetPostDemo.app"
+               BlueprintName = "GetPostDemo"
+               ReferencedContainer = "container:GetPostDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A8FD11B21B73BD7005748CC"
-            BuildableName = "PolarityTE.app"
-            BlueprintName = "PolarityTE"
-            ReferencedContainer = "container:PolarityTE.xcodeproj">
+            BuildableName = "GetPostDemo.app"
+            BlueprintName = "GetPostDemo"
+            ReferencedContainer = "container:GetPostDemo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A8FD11B21B73BD7005748CC"
-            BuildableName = "PolarityTE.app"
-            BlueprintName = "PolarityTE"
-            ReferencedContainer = "container:PolarityTE.xcodeproj">
+            BuildableName = "GetPostDemo.app"
+            BlueprintName = "GetPostDemo"
+            ReferencedContainer = "container:GetPostDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A8FD11B21B73BD7005748CC"
-            BuildableName = "PolarityTE.app"
-            BlueprintName = "PolarityTE"
-            ReferencedContainer = "container:PolarityTE.xcodeproj">
+            BuildableName = "GetPostDemo.app"
+            BlueprintName = "GetPostDemo"
+            ReferencedContainer = "container:GetPostDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
