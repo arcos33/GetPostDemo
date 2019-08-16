@@ -1,6 +1,5 @@
 # GetPostDemo
 ![Screenshot1](ReadMe/screenshot_1.png)
-![Screenshot2](ReadMe/screenshot_2.png)
 ---
 [Link to Acknowledgments](#Acknowledgments)
 One Paragraph of project description goes here
